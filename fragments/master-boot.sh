@@ -43,5 +43,5 @@ systemctl enable lvm2-lvmetad
 systemctl start lvm2-lvmetad
 
 /usr/bin/docker-storage-setup || notify_failure "Docker Storage setup failed"
-
+systemctl start docker
 notify_success "OpenShift node has been prepared for running docker."
