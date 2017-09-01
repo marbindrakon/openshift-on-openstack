@@ -12,6 +12,7 @@ if ! yum info os-collect-config; then
     # if os-collect-config package is not available, first check if
     # the repo is available but disabled, otherwise install the package
     # from epel
+    subscription-manager repos --disable="rhel-7-server-ose-$OCP_VERSION-rpms"
     if yum repolist disabled|grep rhel-7-server-openstack-$OSP_VERSION-rpms; then
         subscription-manager repos --enable="rhel-7-server-openstack-$OSP_VERSION-rpms"
         if [ "$OSP_VERSION" -lt 10 ] ; then
@@ -22,4 +23,5 @@ if ! yum info os-collect-config; then
     fi
 fi
 yum -y install os-collect-config python-zaqarclient os-refresh-config os-apply-config openstack-heat-templates python-oslo-log python-psutil
+subscription-manager repos --enable="rhel-7-server-ose-$OCP_VERSION-rpms"
 #yum-config-manager --disable 'epel*'

@@ -231,6 +231,7 @@ resources:
     type: collect-config-setup/install_config_agent_centos_yum.yaml
     properties:
       osp_version: {get_param: osp_version}
+      ocp_version: {get_param: ocp_version}
 
   # Collect the results from a set of resources
   init:

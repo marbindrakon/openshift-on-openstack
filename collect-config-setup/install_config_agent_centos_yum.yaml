@@ -10,6 +10,10 @@ parameters:
     description: >
       The version of OpenStack Platform to use to collect data
 
+  ocp_version:
+    type: string
+    default: "3.4"
+
 resources:
 
   install_config_agent_yum:
@@ -20,6 +24,7 @@ resources:
         str_replace:
           params:
             $OSP_VERSION: {get_param: osp_version}
+            $OCP_VERSION: {get_param: ocp_version}
           template: {get_file: fragments/install_config_agent_yum.sh}
 
   configure_config_agent:
