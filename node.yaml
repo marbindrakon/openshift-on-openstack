@@ -389,7 +389,6 @@ resources:
       key_name: {get_param: key_name}
       networks:
       - port: {get_resource: port}
-      - port: {get_attr: [internal_port, port]}
       user_data_format: SOFTWARE_CONFIG
       user_data: {get_resource: init}
       metadata: {get_param: metadata}
@@ -462,12 +461,6 @@ resources:
         - path: /usr/local/bin/update_dns
           permissions: 0755
           content: {get_file: fragments/update_dns.py}
-        - path: /etc/sysconfig/network-scripts/ifcfg-eth1
-          content:
-            str_replace:
-              params:
-                $IFNAME: eth1
-              template: {get_file: fragments/ifcfg-eth}
         - path: /etc/pki/ca-trust/source/anchors/ca.crt
           permissions: 0600
           content: {get_param: ca_cert}
@@ -573,14 +566,6 @@ resources:
       fixed_ips:
       - subnet: {get_param: fixed_subnet}
       replacement_policy: AUTO
-
-  # Create a network connection on the internal communications network
-  internal_port:
-    type: OOShift::ContainerPort
-    properties:
-      security_group: {get_param: security_group}
-      network: {get_param: internal_network}
-      subnet: {get_param: internal_subnet}
 
   node_cleanup:
     type: OS::Heat::SoftwareConfig

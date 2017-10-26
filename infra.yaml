@@ -253,14 +253,6 @@ resources:
       floating_network: {get_param: external_network}
       port_id: {get_resource: port}
 
-  # Create a network connection on the internal communications network
-  internal_port:
-    type: OOShift::ContainerPort
-    properties:
-      security_group: {get_param: infra_security_group}
-      network: {get_param: internal_network}
-      subnet: {get_param: internal_subnet}
-
   # Create the VM instance to host the OpenShift infra service
   host:
     type: OS::Nova::Server
@@ -277,7 +269,6 @@ resources:
       key_name: {get_param: key_name}
       networks:
       - port: {get_resource: port}
-      - port: {get_attr: [internal_port, port]}
       user_data_format: SOFTWARE_CONFIG
       user_data: {get_resource: init}
       scheduler_hints:
@@ -346,12 +337,6 @@ resources:
         - path: /usr/local/bin/update_dns
           permissions: 0755
           content: {get_file: fragments/update_dns.py}
-        - path: /etc/sysconfig/network-scripts/ifcfg-eth1
-          content:
-            str_replace:
-              params:
-                $IFNAME: eth1
-              template: {get_file: fragments/ifcfg-eth}
         - path: /etc/pki/ca-trust/source/anchors/ca.crt
           permissions: 0600
           content: {get_param: ca_cert}
